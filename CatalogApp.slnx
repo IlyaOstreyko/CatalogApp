@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/db/">
+    <File Path="init.sql" />
+  </Folder>
+  <Project Path="CatalogApp.Client/CatalogApp.Client.csproj" Id="d948660c-5d41-48df-bfdd-c9d368ee12fb" />
+  <Project Path="CatalogApp.Infrastructure/CatalogApp.Infrastructure.csproj" />
+  <Project Path="CatalogApp.Server/CatalogApp.Server.csproj" />
+  <Project Path="CatalogApp.Shared/CatalogApp.Shared.csproj" />
+</Solution>

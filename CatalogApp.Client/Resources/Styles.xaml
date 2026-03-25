@@ -1,0 +1,293 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:helpers="clr-namespace:CatalogApp.Client.Resources;assembly=CatalogApp.Client"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                    
+>
+    <helpers:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
+    <!-- Palette -->
+    <Color x:Key="PrimaryColor">#FF1F3B8A</Color>
+    <Color x:Key="AccentColor">#FFFFC857</Color>
+    <Color x:Key="BgColor">#FFF6F7FB</Color>
+    <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource PrimaryColor}"/>
+    <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentColor}"/>
+    <SolidColorBrush x:Key="BgBrush" Color="{StaticResource BgColor}"/>
+
+    <!-- Font -->
+    <FontFamily x:Key="AppFont">Segoe UI</FontFamily>
+
+    <!-- Window style -->
+    <Style TargetType="Window">
+        <Setter Property="Background" Value="{StaticResource BgBrush}"/>
+        <Setter Property="FontFamily" Value="{StaticResource AppFont}"/>
+        <Setter Property="WindowStyle" Value="None"/>
+        <Setter Property="AllowsTransparency" Value="True"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderBrush" Value="#FFE6E9F2"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Window">
+                    <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="10">
+
+                        <Grid>
+
+                            <!-- Контент окна; отступ сверху равен высоте верхней панели -->
+                            <ContentPresenter Margin="0,36,0,0"
+                                          Focusable="False"
+                                          Panel.ZIndex="0"/>
+
+                            <!-- Верхняя панель всегда сверху -->
+                            <Grid Height="36"
+                              VerticalAlignment="Top"
+                              Background="Transparent"
+                              Panel.ZIndex="999">
+                                <!-- Здесь можно добавить заголовок, иконку и т.д. -->
+
+                                <!-- Кнопка закрытия с ещё более высоким ZIndex -->
+                                <Button Width="30" Height="30"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"
+                                    Margin="0,0,6,0"
+                                    Background="#FFE57373"
+                                    Foreground="White"
+                                    FontWeight="Bold"
+                                    Content="✕"
+                                    Cursor="Hand"
+                                    BorderThickness="0"
+                                    Padding="0"
+                                    Command="SystemCommands.CloseWindowCommand"
+                                    CommandTarget="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+                                    ToolTip="Закрыть"
+                                    Panel.ZIndex="1000"/>
+                            </Grid>
+
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Card -->
+    <Style x:Key="Card" TargetType="Border">
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="Padding" Value="12"/>
+        <Setter Property="Margin" Value="8"/>
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect Color="#22000000" BlurRadius="8" ShadowDepth="2"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Button -->
+    <Style TargetType="Button">
+        <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Padding" Value="10,6"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}" CornerRadius="8">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="8,4"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Opacity" Value="0.95"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="RenderTransform">
+                    <Setter.Value>
+                        <ScaleTransform ScaleX="0.995" ScaleY="0.995"/>
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity" Value="0.5"/>
+            </Trigger>
+        </Style.Triggers>
+        
+    </Style>
+
+    <!-- TextBox -->
+    <Style x:Key="BaseTextBox" TargetType="TextBox">
+        <Setter Property="Padding" Value="8"/>
+        <Setter Property="BorderBrush" Value="#FFE0E6F2"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="Foreground" Value="#FF222222"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="6">
+                        <ScrollViewer x:Name="PART_ContentHost" Margin="0"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ErrorTextBox" TargetType="TextBox" BasedOn="{StaticResource BaseTextBox}">
+        <Setter Property="Foreground" Value="#FFD32F2F"/>
+        <Setter Property="BorderBrush" Value="#FFD32F2F"/>
+        <Setter Property="Background" Value="#00FFFFFF"/>
+        <Setter Property="IsReadOnly" Value="True"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+
+        <!-- ВАЖНО: биндим Visibility -->
+        <Setter Property="Visibility" 
+            Value="{Binding Text, RelativeSource={RelativeSource Self}, Converter={StaticResource StringToVisibilityConverter}}"/>
+    </Style>
+
+    <Style x:Key="PlaceholderTextBox"
+       TargetType="TextBox"
+       BasedOn="{StaticResource BaseTextBox}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Grid>
+                        <!-- Базовый фон, рамка, скругления -->
+                        <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="6">
+                            <ScrollViewer x:Name="PART_ContentHost" Margin="0"/>
+                        </Border>
+
+                        <!-- Placeholder -->
+                        <TextBlock x:Name="Placeholder"
+                               Text="{TemplateBinding Tag}"
+                               Foreground="#888"
+                               Margin="12,0"
+                               VerticalAlignment="Center"
+                               IsHitTestVisible="False"
+                               Visibility="Collapsed"/>
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Text" Value="">
+                            <Setter TargetName="Placeholder" Property="Visibility" Value="Visible"/>
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="Placeholder" Property="Visibility" Value="Collapsed"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <!-- PasswordBox -->
+    <Style x:Key="PlaceholderPasswordBox" TargetType="PasswordBox">
+        <Setter Property="Padding" Value="8"/>
+        <Setter Property="BorderBrush" Value="#FFE0E6F2"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="helpers:PasswordBoxHelper.Attach" Value="True"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="PasswordBox">
+                    <Grid>
+                        <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="6">
+                            <ScrollViewer x:Name="PART_ContentHost" Margin="0"/>
+                        </Border>
+
+                        <!-- Placeholder -->
+                        <TextBlock x:Name="Placeholder"
+                               Text="{TemplateBinding Tag}"
+                               Foreground="#888"
+                               Margin="12,0"
+                               VerticalAlignment="Center"
+                               IsHitTestVisible="False"
+                               Visibility="Collapsed"/>
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <!-- Показываем placeholder, если нет текста -->
+                        <Trigger Property="helpers:PasswordBoxHelper.HasText" Value="False">
+                            <Setter TargetName="Placeholder" Property="Visibility" Value="Visible"/>
+                        </Trigger>
+
+                        <!-- Скрываем placeholder при фокусе -->
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="Placeholder" Property="Visibility" Value="Collapsed"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ListViewItem -->
+    <Style TargetType="ListViewItem">
+        <Setter Property="Margin" Value="6"/>
+        <Setter Property="Padding" Value="6"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListViewItem">
+                    <Border x:Name="Bd" Background="Transparent" CornerRadius="8">
+                        <ContentPresenter/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="#FFF0F4FF"/>
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="#FFE8EEFF"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ScrollBar -->
+    <Style TargetType="ScrollBar">
+        <Setter Property="Width" Value="10"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ScrollBar">
+                    <Grid Background="Transparent">
+                        <Track Name="PART_Track" IsDirectionReversed="True">
+                            <Track.DecreaseRepeatButton>
+                                <RepeatButton Command="ScrollBar.LineUpCommand" Opacity="0"/>
+                            </Track.DecreaseRepeatButton>
+                            <Track.Thumb>
+                                <Thumb Height="40">
+                                    <Thumb.Template>
+                                        <ControlTemplate TargetType="Thumb">
+                                            <Border Background="#FFBFCFFB" CornerRadius="6"/>
+                                        </ControlTemplate>
+                                    </Thumb.Template>
+                                </Thumb>
+                            </Track.Thumb>
+                            <Track.IncreaseRepeatButton>
+                                <RepeatButton Command="ScrollBar.LineDownCommand" Opacity="0"/>
+                            </Track.IncreaseRepeatButton>
+                        </Track>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+</ResourceDictionary>
